@@ -21,4 +21,7 @@ spec = T.simpleSpec S.initialState perform R.render
 
 perform :: T.PerformAction _ S.State _ A.Action
 perform _ action = do
-  TA.modifyState (U.update action)
+  state <- TA.getState
+  result <- U.update action state
+  TA.setState result.next
+  map Task.exec result.tasks

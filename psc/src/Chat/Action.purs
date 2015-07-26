@@ -6,13 +6,9 @@ module Chat.Action
 
 import qualified Chat.State as S
 
-type MqttInfo =
-  { host :: String
-  , port :: Int
-  , clientId :: String
-  , username :: String
-  , password :: String
-  }
+import qualified Lib.MqttClient as MC
+
+type MqttInfo = MC.MqttInfo
 
 data Action
   = ConnectionFormInput (S.ConnectionForm -> S.ConnectionForm)
