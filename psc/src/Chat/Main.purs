@@ -17,8 +17,8 @@ main :: forall eff. Eff (dom :: DOM | eff) Unit
 main = T.render (T.createClass spec) {}
 
 spec :: T.Spec _ S.State _ A.Action
-spec = T.componentWillMount A.Increment $ T.simpleSpec S.initialState perform R.render
+spec = T.simpleSpec S.initialState perform R.render
 
 perform :: T.PerformAction _ S.State _ A.Action
 perform _ action = do
-    TA.modifyState (U.update action)
+  TA.modifyState (U.update action)
