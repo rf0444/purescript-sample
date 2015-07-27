@@ -7,7 +7,6 @@ module Lib.MqttClient
 
 import Prelude
 import Control.Monad.Eff (Eff())
-import qualified Thermite.Action as TA
 
 foreign import data MqttClient :: *
 

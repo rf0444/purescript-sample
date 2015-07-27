@@ -5,23 +5,33 @@ module Chat.Main
 import Prelude
 import Control.Monad.Eff (Eff())
 import DOM (DOM())
-import qualified Thermite as T
-import qualified Thermite.Action as TA
 
-import qualified Chat.Action as A
-import qualified Chat.Render as R
-import qualified Chat.State as S
-import qualified Chat.Update as U
+import qualified React as R
+import qualified React.DOM as D
+import qualified React.DOM.Props as P
 
-main :: forall eff. Eff (dom :: DOM | eff) Unit
-main = T.render (T.createClass spec) {}
+type State = Int
 
-spec :: T.Spec _ S.State _ A.Action
-spec = T.simpleSpec S.initialState perform R.render
+initialState :: State
+initialState = 0
 
-perform :: T.PerformAction _ S.State _ A.Action
-perform _ action = do
-  state <- TA.getState
-  result <- U.update action state
-  TA.setState result.next
-  map Task.exec result.tasks
+main :: forall eff. Eff (dom :: DOM | eff) R.UI
+main = do
+  let component = D.div [] [ counter {} ]
+  R.renderToBody component
+
+incrementCounter :: forall eff props. R.UIRef -> R.Event -> R.EventHandlerContext eff props State State
+incrementCounter ctx e = do
+  val <- R.readState ctx
+  R.writeState ctx (val + 1)
+
+counter :: forall props. props -> R.UI
+counter = R.mkUI $ R.spec initialState \ctx -> do
+  val <- R.readState ctx
+  return $ D.p
+    [ P.className "Counter"
+    , P.onClick (incrementCounter ctx)
+    ] 
+    [ D.text (show val)
+    , D.text " Click me to increment!"
+    ]
